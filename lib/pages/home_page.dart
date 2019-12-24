@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/config/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -38,6 +39,8 @@ class _HomePageState extends State<HomePage> {
               List<Map> swiper = (data['data']['slides'] as List).cast();
               List<Map> navigatorList = (data['data']['category'] as List).cast();
               String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];
+              String leaderImage = data['data']['shopInfo']['leaderImage'];
+              String leaderPhone = data['data']['shopInfo']['leaderPhone'];
               return Column(
                 children: <Widget>[
                   SwiperDiy(
@@ -46,6 +49,10 @@ class _HomePageState extends State<HomePage> {
                   TopNavigator(navigatorList: navigatorList),
                   AdBanner(
                     adPicture: adPicture,
+                  ),
+                  LeaderPhone(
+                    leaderImage: leaderImage,
+                    leaderPhone: leaderPhone,
                   )
                 ],
               );
@@ -144,5 +151,36 @@ class AdBanner extends StatelessWidget {
     return Container(
       child: Image.network(adPicture),
     );
+  }
+}
+
+//店长电话
+class LeaderPhone extends StatelessWidget {
+  final String leaderImage;
+  final String leaderPhone;
+
+  LeaderPhone({this.leaderImage, this.leaderPhone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InkWell(
+        onTap: () {
+          _launchURL();
+        },
+        child: Image.network(leaderImage),
+      ),
+    );
+  }
+
+  void _launchURL() async {
+    String url = 'tel:' + leaderPhone;
+    print(url);
+    if (await canLaunch(url)) {
+      print('url');
+      await launch(url);
+    } else {
+      throw 'url不能访问';
+    }
   }
 }
