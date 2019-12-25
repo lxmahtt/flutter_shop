@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/config/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -19,7 +20,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
-    _getHotGoods();
+//    到底部上拉自动加载数据
+//    _getHotGoods();
   }
 
   @override
@@ -48,8 +50,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               List<Map> floor2 = (data['data']['floor2'] as List).cast();
               List<Map> floor3 = (data['data']['floor3'] as List).cast();
 
-              return SingleChildScrollView(
-                child: Column(
+              return EasyRefresh(
+                child: ListView(
                   children: <Widget>[
                     SwiperDiy(
                       swiperDateList: swiper,
@@ -83,9 +85,22 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     FloorContent(
                       floorGoodsList: floor3,
                     ),
-                    _hotGoods()
+                    _hotGoods(),
                   ],
                 ),
+                onLoad: () async {
+                  print('开始加载更多..........');
+                  var formData = {'page': page};
+                  await request('homePageBelowConten', formData: formData).then((value) {
+                    var data = json.decode(value.toString());
+                    List<Map> newGoodList = (data['data'] as List).cast();
+                    setState(() {
+                      hotGoodsList.addAll(newGoodList);
+                      page++;
+                    });
+                  });
+                },
+                onRefresh: () async {},
               );
             } else {
               return Center(
@@ -97,7 +112,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         ));
   }
 
-//  获取数据
+  /*//  获取数据
   void _getHotGoods() {
     var formData = {'page': page};
     request('homePageBelowConten', formData: formData).then((value) {
@@ -108,7 +123,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         page++;
       });
     });
-  }
+  }*/
 
   Widget hotTitle = Container(
     margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -239,6 +254,8 @@ class TopNavigator extends StatelessWidget {
       height: ScreenUtil().setHeight(320),
       padding: EdgeInsets.all(3),
       child: GridView.count(
+//        禁止滚动
+        physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 5,
         padding: EdgeInsets.all(5.0),
         children: navigatorList.map((item) {
