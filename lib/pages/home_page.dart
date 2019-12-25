@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   String homePageContent = '正在获取数据';
 
   @override
@@ -41,20 +41,45 @@ class _HomePageState extends State<HomePage> {
               String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];
               String leaderImage = data['data']['shopInfo']['leaderImage'];
               String leaderPhone = data['data']['shopInfo']['leaderPhone'];
-              return Column(
-                children: <Widget>[
-                  SwiperDiy(
-                    swiperDateList: swiper,
-                  ),
-                  TopNavigator(navigatorList: navigatorList),
-                  AdBanner(
-                    adPicture: adPicture,
-                  ),
-                  LeaderPhone(
-                    leaderImage: leaderImage,
-                    leaderPhone: leaderPhone,
-                  )
-                ],
+              List<Map> recommendList = (data['data']['recommend'] as List).cast();
+              String floor1Title = data['data']['floor1Pic']['PICTURE_ADDRESS'];
+              String floor2Title = data['data']['floor2Pic']['PICTURE_ADDRESS'];
+              String floor3Title = data['data']['floor3Pic']['PICTURE_ADDRESS'];
+              List<Map> floor1 = (data['data']['floor1'] as List).cast();
+              List<Map> floor2 = (data['data']['floor2'] as List).cast();
+              List<Map> floor3 = (data['data']['floor3'] as List).cast();
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    SwiperDiy(
+                      swiperDateList: swiper,
+                    ),
+                    TopNavigator(navigatorList: navigatorList),
+                    AdBanner(
+                      adPicture: adPicture,
+                    ),
+                    LeaderPhone(
+                      leaderImage: leaderImage,
+                      leaderPhone: leaderPhone,
+                    ),
+                    Recommend(
+                      recommendList: recommendList,
+                    ),
+                    FloorTitle(
+                      picture_address: floor1Title,
+                    ),
+                    FloorContent(floorGoodsList: floor1,),
+                    FloorTitle(
+                      picture_address: floor2Title,
+                    ),
+                    FloorContent(floorGoodsList: floor2,),
+                    FloorTitle(
+                      picture_address: floor3Title,
+                    ),
+                    FloorContent(floorGoodsList: floor3,),
+                  ],
+                ),
               );
             } else {
               return Center(
@@ -65,6 +90,10 @@ class _HomePageState extends State<HomePage> {
           future: getHomePageContent(),
         ));
   }
+
+//  保持页面状态
+  @override
+  bool get wantKeepAlive => true;
 }
 
 //首页轮播组件
@@ -173,6 +202,7 @@ class LeaderPhone extends StatelessWidget {
     );
   }
 
+//  拨打电话
   void _launchURL() async {
     String url = 'tel:' + leaderPhone;
     print(url);
@@ -182,5 +212,135 @@ class LeaderPhone extends StatelessWidget {
     } else {
       throw 'url不能访问';
     }
+  }
+}
+
+//商品推荐
+class Recommend extends StatelessWidget {
+  final List recommendList;
+
+  Recommend({this.recommendList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: ScreenUtil().setHeight(400),
+      margin: EdgeInsets.only(top: 10.0),
+      child: Column(
+        children: <Widget>[_titleWidget(), _recommendList()],
+      ),
+    );
+  }
+
+//  标题
+  Widget _titleWidget() {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.fromLTRB(10.0, 2.0, 0, 5.0),
+      decoration:
+          BoxDecoration(color: Colors.white, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
+      child: Text(
+        '商品推荐',
+        style: TextStyle(color: Colors.pink),
+      ),
+    );
+  }
+
+//  商品单独项
+  Widget _item(index) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        height: ScreenUtil().setHeight(360),
+        width: ScreenUtil().setWidth(240),
+        padding: EdgeInsets.all(8.0),
+        decoration:
+            BoxDecoration(color: Colors.white, border: Border(left: BorderSide(width: 0.5, color: Colors.black12))),
+        child: Column(
+          children: <Widget>[
+            Image.network(recommendList[index]['image']),
+            Text('￥${recommendList[index]['mallPrice']}'),
+            Text(
+              '￥${recommendList[index]['price']}',
+              style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+//  横向列表方法
+  Widget _recommendList() {
+    return Container(
+      height: ScreenUtil().setHeight(330),
+      child: ListView.builder(
+        itemBuilder: (context, index) {
+          return _item(index);
+        },
+        itemCount: recommendList.length,
+        scrollDirection: Axis.horizontal,
+      ),
+    );
+  }
+}
+
+//楼层标题
+class FloorTitle extends StatelessWidget {
+  final String picture_address;
+
+  FloorTitle({this.picture_address});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Image.network(picture_address),
+    );
+  }
+}
+
+//楼层商品列表
+class FloorContent extends StatelessWidget {
+  final List floorGoodsList;
+
+  FloorContent({this.floorGoodsList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[_firstRow(), _otherGoods()],
+      ),
+    );
+  }
+
+  Widget _firstRow() {
+    return Row(
+      children: <Widget>[
+        _goodsItem(floorGoodsList[0]),
+        Column(
+          children: <Widget>[_goodsItem(floorGoodsList[1]), _goodsItem(floorGoodsList[2])],
+        )
+      ],
+    );
+  }
+
+  Widget _otherGoods() {
+    return Row(
+      children: <Widget>[_goodsItem(floorGoodsList[3]), _goodsItem(floorGoodsList[4])],
+    );
+  }
+
+  Widget _goodsItem(Map goods) {
+    return Container(
+      width: ScreenUtil().setWidth(375),
+      child: InkWell(
+        onTap: () {
+          print('点击了楼层商品');
+        },
+        child: Image.network(goods['image']),
+      ),
+    );
   }
 }
