@@ -43,7 +43,6 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
     _getCategory();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,6 +66,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
             BoxDecoration(color: Colors.white, border: Border(bottom: BorderSide(width: 1, color: Colors.black12))),
         child: Text(
           list[index].mallCategoryName,
+          style: TextStyle(fontSize: ScreenUtil().setSp(28)),
         ),
       ),
     );
