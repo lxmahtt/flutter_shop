@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   String homePageContent = '正在获取数据';
 
-  @override
+  /*@override
   void initState() {
     super.initState();
     getHomePageContent().then((value) {
@@ -22,10 +22,11 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         homePageContent = value.toString();
       });
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    var formData = {'lon': '115.02932', 'lat': '35.76189'};
     return Scaffold(
 //        backgroundColor: Colors.grey,
         appBar: AppBar(
@@ -69,15 +70,22 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     FloorTitle(
                       picture_address: floor1Title,
                     ),
-                    FloorContent(floorGoodsList: floor1,),
+                    FloorContent(
+                      floorGoodsList: floor1,
+                    ),
                     FloorTitle(
                       picture_address: floor2Title,
                     ),
-                    FloorContent(floorGoodsList: floor2,),
+                    FloorContent(
+                      floorGoodsList: floor2,
+                    ),
                     FloorTitle(
                       picture_address: floor3Title,
                     ),
-                    FloorContent(floorGoodsList: floor3,),
+                    FloorContent(
+                      floorGoodsList: floor3,
+                    ),
+                    HotGoods()
                   ],
                 ),
               );
@@ -87,7 +95,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               );
             }
           },
-          future: getHomePageContent(),
+          future: request('homePageContent', formData),
         ));
   }
 
@@ -341,6 +349,28 @@ class FloorContent extends StatelessWidget {
         },
         child: Image.network(goods['image']),
       ),
+    );
+  }
+}
+
+class HotGoods extends StatefulWidget {
+  @override
+  _HotGoodsState createState() => _HotGoodsState();
+}
+
+class _HotGoodsState extends State<HotGoods> {
+  @override
+  void initState() {
+    super.initState();
+    request('homePageBelowConten', 1).then((value) {
+      print(value);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text('lxm'),
     );
   }
 }
