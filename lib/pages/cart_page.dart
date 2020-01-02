@@ -20,7 +20,7 @@ class Number extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 200),
-      child: Provide<Counter>(builder: (context, child, counter) {
+      child: Provide<CounterProvide>(builder: (context, child, counter) {
         return Text(
           '${counter.value}',
           style: Theme.of(context).textTheme.display1,
@@ -36,7 +36,7 @@ class MyButton extends StatelessWidget {
     return Container(
       child: RaisedButton(
         onPressed: () {
-          Provide.value<Counter>(context).increment();
+          Provide.value<CounterProvide>(context).increment();
         },
         child: Text('递增'),
       ),

@@ -8,15 +8,15 @@ import 'package:provide/provide.dart';
 import 'pages/index_page.dart';
 
 void main() {
-  var counter = Counter();
-  var childCategory = ChildCategory();
+  var counter = CounterProvide();
+  var childCategory = ChildCategoryProvide();
   var providers = Providers();
   var categoryGoodsListProvide = CategoryGoodsListProvide();
 
   providers
-    ..provide(Provider<Counter>.value(counter))
+    ..provide(Provider<CounterProvide>.value(counter))
     ..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsListProvide))
-    ..provide(Provider<ChildCategory>.value(childCategory));
+    ..provide(Provider<ChildCategoryProvide>.value(childCategory));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
 
