@@ -74,7 +74,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
           listIndex = index;
         });
         var childList = list[index].bxMallSubDto;
-        Provide.value<ChildCategoryProvide>(context).getChildCategory(childList);
+        Provide.value<ChildCategoryProvide>(context).getChildCategory(childList, list[index].mallCategoryId);
         _getGoodsList(categoryId: childList[index].mallCategoryId);
       },
       child: Container(
@@ -99,7 +99,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
         list = category.data;
       });
 //      默认给第一个数据
-      Provide.value<ChildCategoryProvide>(context).getChildCategory(list[0].bxMallSubDto);
+      Provide.value<ChildCategoryProvide>(context).getChildCategory(list[0].bxMallSubDto, list[0].mallCategoryId);
     });
   }
 
@@ -152,6 +152,7 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
       onTap: () {
         //改变状态
         Provide.value<ChildCategoryProvide>(context).changeChildIndex(index);
+        _getGoodsList(categorySubId: item.mallSubId);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -161,6 +162,19 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
         ),
       ),
     );
+  }
+
+  void _getGoodsList({String categorySubId}) async {
+    var data = {
+      'categoryId': Provide.value<ChildCategoryProvide>(context).categoryId,
+      'categorySubId': categorySubId,
+      'page': '1'
+    };
+    await request('getMallGoods', formData: data).then((value) {
+      var data = json.decode(value.toString());
+      CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+      Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+    });
   }
 }
 
