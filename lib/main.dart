@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shop/provide/child_category.dart';
 import 'package:flutter_shop/provide/counter.dart';
 import 'package:provide/provide.dart';
 
@@ -7,8 +8,11 @@ import 'pages/index_page.dart';
 
 void main() {
   var counter = Counter();
+  var childCategory = ChildCategory();
   var providers = Providers();
-  providers..provide(Provider<Counter>.value(counter));
+  providers
+    ..provide(Provider<Counter>.value(counter))
+    ..provide(Provider<ChildCategory>.value(childCategory));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
 
