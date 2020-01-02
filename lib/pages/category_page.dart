@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/config/service_method.dart';
 import 'package:flutter_shop/model/CategoryBigModel.dart';
@@ -196,11 +197,15 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
         width: ScreenUtil().setWidth(570),
         child: Provide<CategoryGoodsListProvide>(builder: (context, child, categoryList) {
           if (categoryList.goodsList.length > 0) {
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return _listWidget(categoryList.goodsList, index);
-              },
-              itemCount: categoryList.goodsList.length,
+            return EasyRefresh(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return _listWidget(categoryList.goodsList, index);
+                },
+                itemCount: categoryList.goodsList.length,
+              ),
+              onRefresh: () async {},
+              onLoad: () async {},
             );
           } else {
             return Text('暂无数据');

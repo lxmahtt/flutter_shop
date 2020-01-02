@@ -16,12 +16,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   String homePageContent = '正在获取数据';
   int page = 1;
   List<Map> hotGoodsList = [];
+  EasyRefreshController _controller;
 
   @override
   void initState() {
     super.initState();
 //    到底部上拉自动加载数据
 //    _getHotGoods();
+    _controller = EasyRefreshController();
   }
 
   @override
@@ -87,15 +89,20 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                     _hotGoods(),
                   ],
                 ),
+                controller: _controller,
                 onLoad: () async {
                   var formData = {'page': page};
                   await request('homePageBelowConten', formData: formData).then((value) {
                     var data = json.decode(value.toString());
-                    List<Map> newGoodList = (data['data'] as List).cast();
-                    setState(() {
-                      hotGoodsList.addAll(newGoodList);
-                      page++;
-                    });
+                    if (data['data'] == null) {
+                      _controller.finishLoad();
+                    } else {
+                      List<Map> newGoodList = (data['data'] as List).cast();
+                      setState(() {
+                        hotGoodsList.addAll(newGoodList);
+                        page++;
+                      });
+                    }
                   });
                 },
                 onRefresh: () async {},
@@ -227,8 +234,7 @@ class TopNavigator extends StatelessWidget {
 
   Widget _gridViewItemUI(BuildContext context, item) {
     return InkWell(
-      onTap: () {
-      },
+      onTap: () {},
       child: Column(
         children: <Widget>[
           Image.network(
@@ -429,8 +435,7 @@ class FloorContent extends StatelessWidget {
     return Container(
       width: ScreenUtil().setWidth(375),
       child: InkWell(
-        onTap: () {
-        },
+        onTap: () {},
         child: Image.network(goods['image']),
       ),
     );
