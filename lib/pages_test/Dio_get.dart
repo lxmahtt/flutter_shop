@@ -49,7 +49,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _chooseAction() {
-    print('开始选择你喜欢的类型。。。');
     if (typeController.text.toString() == '') {
       showDialog(
           context: context,
@@ -59,7 +58,6 @@ class _HomePageState extends State<HomePage> {
     } else {
       getHttp(typeController.text.toString()).then((value) {
         setState(() {
-          print(value);
           showText = value['data']['name'].toString();
         });
       });

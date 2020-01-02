@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _jike() {
-    print('开始请求数据');
     getHttp().then((value) {
       setState(() {
         showText = value['data'].toString();
@@ -48,7 +47,6 @@ class _HomePageState extends State<HomePage> {
       dio.options.headers = httpHeaders;
       response =
       await dio.get('https://time.geekbang.org/serv/v1/column/label_skus');
-      print(response);
       return response.data;
     } catch (e) {
       print(e.toString());

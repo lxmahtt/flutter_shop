@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var data = json.decode(snapshot.data.toString());
-              print(data.toString());
               List<Map> swiper = (data['data']['slides'] as List).cast();
               List<Map> navigatorList = (data['data']['category'] as List).cast();
               String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];
@@ -89,7 +88,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   ],
                 ),
                 onLoad: () async {
-                  print('开始加载更多..........');
                   var formData = {'page': page};
                   await request('homePageBelowConten', formData: formData).then((value) {
                     var data = json.decode(value.toString());
@@ -199,9 +197,9 @@ class SwiperDiy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('设置的像素密度:${ScreenUtil.pixelRatio}');
-    print('设置的高:${ScreenUtil.screenHeight}');
-    print('设置的宽:${ScreenUtil.screenWidth}');
+//    print('设置的像素密度:${ScreenUtil.pixelRatio}');
+//    print('设置的高:${ScreenUtil.screenHeight}');
+//    print('设置的宽:${ScreenUtil.screenWidth}');
 
     return Container(
       height: ScreenUtil().setHeight(333),
@@ -230,7 +228,6 @@ class TopNavigator extends StatelessWidget {
   Widget _gridViewItemUI(BuildContext context, item) {
     return InkWell(
       onTap: () {
-        print('点击了导航');
       },
       child: Column(
         children: <Widget>[
@@ -304,7 +301,6 @@ class LeaderPhone extends StatelessWidget {
     String url = 'tel:' + leaderPhone;
     print(url);
     if (await canLaunch(url)) {
-      print('url');
       await launch(url);
     } else {
       throw 'url不能访问';
@@ -434,7 +430,6 @@ class FloorContent extends StatelessWidget {
       width: ScreenUtil().setWidth(375),
       child: InkWell(
         onTap: () {
-          print('点击了楼层商品');
         },
         child: Image.network(goods['image']),
       ),

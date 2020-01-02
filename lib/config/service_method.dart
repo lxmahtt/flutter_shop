@@ -7,7 +7,6 @@ import 'package:flutter_shop/config/service_url.dart';
 //获取首页主题内容
 Future request(url, {formData}) async {
   try {
-    print('开始获取数据...............');
     Response response;
     Dio dio = new Dio();
     dio.options.contentType = ContentType.parse("application/x-www-form-urlencoded;charset=UTF-8").toString();
@@ -29,7 +28,6 @@ Future request(url, {formData}) async {
 //获取首页主题内容
 Future getHomePageContent() async {
   try {
-    print('开始获取首页数据...............');
     Response response;
     Dio dio = new Dio();
     dio.options.contentType = ContentType.parse("application/x-www-form-urlencoded;charset=UTF-8").toString();
@@ -48,7 +46,6 @@ Future getHomePageContent() async {
 //获取首页火爆专区
 Future getHomePageBelowContent() async {
   try {
-    print('开始获火爆专区...............');
     Response response;
     Dio dio = new Dio();
     dio.options.contentType = ContentType.parse("application/x-www-form-urlencoded;charset=UTF-8").toString();
