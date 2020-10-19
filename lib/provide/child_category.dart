@@ -9,12 +9,12 @@ class ChildCategoryProvide with ChangeNotifier {
   int page = 1; //列表页
   String noMoreText = ''; //没有数据时，显示的文字
 
-//  大类切换
+  //  大类切换
   getChildCategory(List<BxMallSubDto> list, String categoryId) {
-//    每次点击大类，都清空为0
+    //    每次点击大类，都清空为0
     page = 1; //默认给1，
     noMoreText = '';
-    childIndex = 0;
+    childIndex = 0; //每次点击都要清0
     BxMallSubDto all = BxMallSubDto();
     all.mallSubId = '';
     all.mallCategoryId = '';
